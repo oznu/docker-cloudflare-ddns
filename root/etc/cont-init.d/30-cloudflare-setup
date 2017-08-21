@@ -1,0 +1,58 @@
+#!/usr/bin/with-contenv sh
+
+. /app/cloudflare.sh
+
+# Verify the $EMAIL and $API_KEY env variables are valid
+statusCode=$(verifyToken)
+
+if [ "$statusCode" != "200" ]; then
+  echo "----------------------------------------------------------------"
+  echo "ERROR: Invalid CloudFlare Credentials - $statusCode"
+  echo "----------------------------------------------------------------"
+  echo "Make sure the EMAIL and API_KEY variables are correct. You can"
+  echo "get your CloudFlare API Key here:"
+  echo
+  echo "https://www.cloudflare.com/a/profile"
+  echo "----------------------------------------------------------------"
+  exit 1
+fi
+
+# Get the ID of the zone from the CloudFlare API
+CFZoneId=$(getZoneId)
+
+if [ "$CFZoneId" == "null" ]; then
+  echo "----------------------------------------------------------------"
+  echo "ERROR: Zone for $ZONE was not found in your CloudFlare Account"
+  echo "----------------------------------------------------------------"
+  echo "Make sure the ZONE variable is correct and the domain exists"
+  echo "in your CloudFlare account. You can add a new domain here:"
+  echo
+  echo "https://www.cloudflare.com/a/add-site"
+  echo "----------------------------------------------------------------"
+  exit 1
+fi
+
+echo "DNS Zone: $ZONE ($CFZoneId)"
+
+# Get the ID of the dns record from the CloudFlare API
+CFDnsRecordName=$(getDnsRecordName)
+CFDnsRecordId=$(getDnsRecordId $CFZoneId $CFDnsRecordName)
+
+# If the dns record does not exist, create it now.
+if [ "$CFDnsRecordId" == "null" ]; then
+  echo "DNS record for '$CFDnsRecordName' was not found in $ZONE zone. Creating now..."
+  PublicIpAddress=$(getPublicIpAddress)
+  CFDnsRecordId=$(createDnsRecord $CFZoneId $CFDnsRecordName $PublicIpAddress)
+
+  if [ "$CFDnsRecordId" == "null" ]; then
+    echo "----------------------------------------------------------------"
+    echo "ERROR: Failed to create DNS record '$CFDnsRecordName'"
+    echo "----------------------------------------------------------------"
+    exit 1
+  fi
+
+fi
+
+echo "DNS Record: $CFDnsRecordName ($CFDnsRecordId)"
+echo "CF_ZONE_ID=\"$CFZoneId\" CF_RECORD_ID=\"$CFDnsRecordId\" CF_RECORD_NAME=\"$CFDnsRecordName\"" > /config/cloudflare.conf
+echo "*/5	*	*	*	*	/etc/cont-init.d/50-ddns" > /var/spool/cron/crontabs/root
