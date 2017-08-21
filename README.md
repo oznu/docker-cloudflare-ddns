@@ -14,7 +14,7 @@ docker run \
   -e EMAIL=hello@example.com \
   -e API_KEY=xxxxxxx \
   -e ZONE=example.com \
-  -e SUBDOMAIN=subdomain.example.com \
+  -e SUBDOMAIN=subdomain \
   oznu/cloudflare-ddns
 ```
 
