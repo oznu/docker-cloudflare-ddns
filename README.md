@@ -1,3 +1,6 @@
+
+ [![Docker Automated buil](https://img.shields.io/docker/automated/oznu/cloudflare-ddns.svg)](https://hub.docker.com/r/oznu/homebridge/) [![](https://images.microbadger.com/badges/image/oznu/dns-ad-blocker.svg)](https://hub.docker.com/r/oznu/dns-ad-blocker/)
+
 # Docker CloudFlare DDNS
 
 This small Alpine Linux based Docker image will allow you to use the free [CloudFlare DNS Service](https://www.cloudflare.com/dns/) as a Dynamic DNS Provider ([DDNS](https://en.wikipedia.org/wiki/Dynamic_DNS)).
