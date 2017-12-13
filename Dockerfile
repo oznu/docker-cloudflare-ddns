@@ -1,4 +1,4 @@
-FROM oznu/s6-alpine
+FROM oznu/s6-alpine:3.7
 
 RUN apk add --no-cache jq curl bind-tools
 
