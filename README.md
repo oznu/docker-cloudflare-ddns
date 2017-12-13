@@ -1,5 +1,4 @@
-
- [![Docker Automated buil](https://img.shields.io/docker/automated/oznu/cloudflare-ddns.svg)](https://hub.docker.com/r/oznu/homebridge/) [![](https://images.microbadger.com/badges/image/oznu/dns-ad-blocker.svg)](https://hub.docker.com/r/oznu/dns-ad-blocker/)
+[![Docker Build Status](https://img.shields.io/docker/build/oznu/cloudflare-ddns.svg?label=x64%20build&style=for-the-badge)](https://hub.docker.com/r/oznu/cloudflare-ddns/) [![Travis](https://img.shields.io/travis/oznu/docker-cloudflare-ddns.svg?label=arm%20build&style=for-the-badge)](https://travis-ci.org/oznu/docker-cloudflare-ddns)
 
 # Docker CloudFlare DDNS
 
