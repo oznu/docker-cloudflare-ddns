@@ -10,7 +10,15 @@ cloudflare() {
 }
 
 getPublicIpAddress() {
-  dig +short @resolver1.opendns.com myip.opendns.com A
+  # try dns method first.
+  IP_ADDRESS=$(dig +short @resolver1.opendns.com myip.opendns.com A)
+
+  # if dns method fails, use http method
+  if [ "$IP_ADDRESS" = "" ]; then
+    IP_ADDRESS=$(curl -sf4 https://diagnostic.opendns.com/myip)
+  fi
+
+  echo $IP_ADDRESS
 }
 
 getDnsRecordName() {
