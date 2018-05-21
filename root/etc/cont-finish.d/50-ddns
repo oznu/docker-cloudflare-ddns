@@ -1,0 +1,21 @@
+#!/usr/bin/with-contenv sh
+
+. /app/cloudflare.sh
+. /config/cloudflare.conf
+
+  if [[ "$DELETE_ON_STOP" != "true" && "$DELETE_ON_STOP" != "false" ]]; then
+    DELETE_ON_STOP="true"
+  fi
+
+  if [ "$DELETE_ON_STOP" = "false" ]; then
+    echo "CloudFlare DNS record retained after exit."
+    exit 0
+  else
+    update=$(deleteDnsRecord $CF_ZONE_ID $CF_RECORD_ID )
+  fi
+
+if [ "$update" == "null" ]; then
+  echo "ERROR: Failed to delete CloudFlare DNS record $CF_RECORD_NAME"
+else
+  echo "CloudFlare DNS record $CF_RECORD_NAME deleted successfully."
+fi
