@@ -36,7 +36,7 @@ docker run \
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
 * `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
-* `-e DELETE_ON_STOP` - Set to `false` to prevent zone record removal on Docker stop. Defaults to `true`.
+* `-e DELETE_ON_STOP` - Set to `true` to enable zone record removal on Docker stop. Defaults to `false`.
 
 ## Multiple Domains
 

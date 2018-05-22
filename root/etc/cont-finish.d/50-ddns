@@ -4,7 +4,7 @@
 . /config/cloudflare.conf
 
   if [[ "$DELETE_ON_STOP" != "true" && "$DELETE_ON_STOP" != "false" ]]; then
-    DELETE_ON_STOP="true"
+    DELETE_ON_STOP="false"
   fi
 
   if [ "$DELETE_ON_STOP" = "false" ]; then
