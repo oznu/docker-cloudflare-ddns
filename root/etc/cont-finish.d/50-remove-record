@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv sh
+
+. /app/cloudflare.sh
+. /config/cloudflare.conf
+
+if [ "$DELETE_ON_STOP" == "true" ]; then
+  echo "Deleting CloudFlare DNS record $CF_RECORD_NAME..."
+
+  update=$(deleteDnsRecord $CF_ZONE_ID $CF_RECORD_ID)
+
+  if [ "$update" == "null" ]; then
+    echo "ERROR: Failed to delete CloudFlare DNS record $CF_RECORD_NAME"
+  else
+    echo "CloudFlare DNS record $CF_RECORD_NAME deleted successfully."
+  fi
+else
+  echo "Not going to delete zone record. Deleting the zone record on container stop is disable by default."
+fi
