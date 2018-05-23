@@ -15,7 +15,7 @@ getPublicIpAddress() {
 
   # if dns method fails, use http method
   if [ "$IP_ADDRESS" = "" ]; then
-    IP_ADDRESS=$(curl -sf4 https://diagnostic.opendns.com/myip)
+    IP_ADDRESS=$(curl -sf4 ipinfo.io | jq -r '.ip')
   fi
 
   echo $IP_ADDRESS
@@ -55,6 +55,10 @@ updateDnsRecord() {
   fi
 
   cloudflare -X PUT -d "{\"type\": \"A\",\"name\":\"$3\",\"content\":\"$4\",\"proxied\":$PROXIED}" "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
+}
+
+deleteDnsRecord() {
+  cloudflare -X DELETE "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
 }
 
 getDnsRecordIp() {
