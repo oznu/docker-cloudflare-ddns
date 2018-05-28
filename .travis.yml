@@ -15,7 +15,7 @@ before_script:
   - docker pull $TARGET_IMAGE:$TARGET_IMAGE_TAG && export IMAGE_CACHE="--cache-from $TARGET_IMAGE:$TARGET_IMAGE_TAG" || export IMAGE_CACHE=""
 
 script:
-  - docker build -f $DOCKERFILE $IMAGE_CACHE --build-arg --build-arg S6_ARCH=${S6_ARCH} -t $TARGET_IMAGE:$TARGET_IMAGE_TAG .
+  - docker build -f $DOCKERFILE $IMAGE_CACHE --build-arg S6_ARCH=${S6_ARCH} -t $TARGET_IMAGE:$TARGET_IMAGE_TAG .
   - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   - docker push $TARGET_IMAGE:$TARGET_IMAGE_TAG
   
