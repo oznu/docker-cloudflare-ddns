@@ -36,11 +36,16 @@ docker run \
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
 * `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
+* `-e RRTYPE=A` - Set to `AAAA` to use set IPv6 records instead of IPv4 records. Defaults to `A` for IPv4 records.
 * `-e DELETE_ON_STOP` - Set to `true` to have the dns record deleted when the container is stopped. Defaults to `false`.
 
 ## Multiple Domains
 
 If you need multiple records pointing to your public IP address you can create CNAME records in CloudFlare.
+
+## IPv6
+
+If you're wanting to set IPv6 records set the envrionment variable `RRTYPE=AAAA`. You will also need to run docker with IPv6 support, or run the container with host networking enabled.
 
 ## Docker Compose
 
