@@ -1,8 +1,16 @@
-[![Docker Build Status](https://img.shields.io/docker/build/oznu/cloudflare-ddns.svg?label=x64%20build&style=for-the-badge)](https://hub.docker.com/r/oznu/cloudflare-ddns/) [![Travis](https://img.shields.io/travis/oznu/docker-cloudflare-ddns.svg?label=arm%20build&style=for-the-badge)](https://travis-ci.org/oznu/docker-cloudflare-ddns)
+[![Travis](https://img.shields.io/travis/oznu/docker-cloudflare-ddns.svg)](https://travis-ci.org/oznu/docker-cloudflare-ddns) [![Docker Pulls](https://img.shields.io/docker/pulls/oznu/cloudflare-ddns.svg)](https://hub.docker.com/r/oznu/cloudflare-ddns/)
 
 # Docker CloudFlare DDNS
 
 This small Alpine Linux based Docker image will allow you to use the free [CloudFlare DNS Service](https://www.cloudflare.com/dns/) as a Dynamic DNS Provider ([DDNS](https://en.wikipedia.org/wiki/Dynamic_DNS)).
+
+## Image Variants
+
+| Image Tag             | Architecture  | OS            | Size   |
+| :-------------------- | :-------------| :------------ | :----  |
+| latest                | x64           | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns.svg)](https://microbadger.com/images/oznu/cloudflare-ddns) |
+| armhf          | arm32v6       | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns:armhf.svg)](https://microbadger.com/images/oznu/cloudflare-ddns:armhf) |
+| aarch64         | arm64       | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns:aarch64.svg)](https://microbadger.com/images/oznu/cloudflare-ddns:aarch64) |
 
 ## Usage
 
@@ -17,7 +25,7 @@ docker run \
   oznu/cloudflare-ddns
 ```
 
-This image will also run on a Raspberry Pi or any other ARM based boards that support Docker:
+This image will also run on a Raspberry Pi or other ARM based boards that support Docker using the `armhf` or `aarch64` tags:
 
 ```shell
 docker run \
