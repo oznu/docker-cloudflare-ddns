@@ -34,6 +34,26 @@ fi
 
 echo "DNS Zone: $ZONE ($CFZoneId)"
 
+# Check we can get the current public ip address
+PublicIpAddress=$(getPublicIpAddress)
+
+if [ "$PublicIpAddress" == "" ]; then
+  echo "----------------------------------------------------------------"
+  if [ "$RRTYPE" == "AAAA" ]; then
+    echo "ERROR: Failed To Get Public IPv6 Address"
+    echo "----------------------------------------------------------------"
+    echo "You must be running Docker with IPv6 support enabled or this"
+    echo "container with host networking enabled."
+    echo
+    echo "Add '--net=host' to your docker run command or if using"
+    echo "docker-compose add 'network_mode: host' to this service."
+  else
+    echo "ERROR: Failed To Get Public IPv4 Address"
+  fi
+  echo "----------------------------------------------------------------"
+  exit 1
+fi
+
 # Get the ID of the dns record from the CloudFlare API
 CFDnsRecordName=$(getDnsRecordName)
 CFDnsRecordId=$(getDnsRecordId $CFZoneId $CFDnsRecordName)
@@ -41,7 +61,6 @@ CFDnsRecordId=$(getDnsRecordId $CFZoneId $CFDnsRecordName)
 # If the dns record does not exist, create it now.
 if [ "$CFDnsRecordId" == "null" ]; then
   echo "DNS record for '$CFDnsRecordName' was not found in $ZONE zone. Creating now..."
-  PublicIpAddress=$(getPublicIpAddress)
   CFDnsRecordId=$(createDnsRecord $CFZoneId $CFDnsRecordName $PublicIpAddress)
 
   if [ "$CFDnsRecordId" == "null" ]; then

@@ -1,5 +1,7 @@
 #!/usr/bin/with-contenv sh
 
+[ -f /config/cloudflare.conf ] || exit 0
+
 . /app/cloudflare.sh
 . /config/cloudflare.conf
 

@@ -63,11 +63,12 @@ If you prefer to use [Docker Compose](https://docs.docker.com/compose/):
 version: '2'
 services:
   cloudflare-ddns:
-    image: oznu/cloudflare-ddns
+    image: oznu/cloudflare-ddns:latest # change 'latest' to 'armhf' or 'aarch64' if running on an arm device
     restart: always
     environment:
       - EMAIL=hello@example.com
       - API_KEY=xxxxxxx
       - ZONE=example.com
       - SUBDOMAIN=subdomain
+      - PROXIED=false
 ```
