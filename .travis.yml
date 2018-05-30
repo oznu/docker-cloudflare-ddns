@@ -5,7 +5,7 @@ services:
 
 jobs:
   include:
-    - stage: build
+    - stage: build docker images
       env:
         - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX="amd64"
         - S6_ARCH=armhf DOCKERFILE="Dockerfile" TAG_SUFFIX="armhf"
@@ -22,11 +22,12 @@ jobs:
         - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         - docker push $TARGET_IMAGE:$TARGET_IMAGE_TAG
 
-    - stage: manifest
+    - stage: publish manifest
       script:
-        - echo '{"experimental" : "enabled"}' > ~/.docker/config.json
+        - echo "{\"experimental\" : \"enabled\"}" > ~/.docker/config.json
         - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         - docker manifest create --amend \
+            $TARGET_IMAGE:latest \
             $TARGET_IMAGE:amd64 \
             $TARGET_IMAGE:armhf \
             $TARGET_IMAGE:aarch64
