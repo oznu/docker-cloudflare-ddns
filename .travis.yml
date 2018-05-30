@@ -4,7 +4,7 @@ services:
   - docker
 
 env:
-  - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX="amd64"
+  - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX="latest"
   - S6_ARCH=armhf DOCKERFILE="Dockerfile" TAG_SUFFIX="armhf"
   - S6_ARCH=aarch64 DOCKERFILE="Dockerfile" TAG_SUFFIX="aarch64"
 
@@ -18,21 +18,3 @@ script:
   - docker build -f $DOCKERFILE $IMAGE_CACHE --build-arg S6_ARCH=${S6_ARCH} -t $TARGET_IMAGE:$TARGET_IMAGE_TAG .
   - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   - docker push $TARGET_IMAGE:$TARGET_IMAGE_TAG
-
-jobs:
-  include:
-    - stage: publish manifest
-      script:
-        - echo "{\"experimental\" : \"enabled\"}" > ~/.docker/config.json
-        - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        - docker manifest create --amend \
-            $TARGET_IMAGE:latest \
-            $TARGET_IMAGE:amd64 \
-            $TARGET_IMAGE:armhf \
-            $TARGET_IMAGE:aarch64
-        - docker manifest annotate $TARGET_IMAGE:latest $TARGET_IMAGE:amd64 --arch amd64
-        - docker manifest annotate $TARGET_IMAGE:latest $TARGET_IMAGE:armhf --arch arm
-        - docker manifest annotate $TARGET_IMAGE:latest $TARGET_IMAGE:aarch64 --arch arm64
-        - docker manifest push $TARGET_IMAGE
-        - docker manifest inspect $TARGET_IMAGE
-        
