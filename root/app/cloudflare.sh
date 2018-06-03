@@ -26,7 +26,7 @@ getPublicIpAddress() {
 
     # backup http method
     if [ "$IP_ADDRESS" = "" ]; then
-      IP_ADDRESS=$(curl -sf6 https//diagnostic.opendns.com/myip)
+      IP_ADDRESS=$(curl -sf6 https://diagnostic.opendns.com/myip)
     fi
 
     echo $IP_ADDRESS
