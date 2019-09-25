@@ -9,6 +9,12 @@ cloudflare() {
     "$@"
 }
 
+getLocalIpAddress() {
+    IP_ADDRESS=$(ip addr show $INTERFACE | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')
+    
+    echo $IP_ADDRESS
+}
+
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # try dns method first.
