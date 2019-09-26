@@ -6,6 +6,10 @@
 CurrentIpAddress=$(getPublicIpAddress)
 DnsIpAddress=$(getDnsRecordIp $CF_ZONE_ID $CF_RECORD_ID)
 
+if [ ! -z ${INTERFACE+x} ]; then
+  CurrentIpAddress=$(getLocalIpAddress)
+fi
+
 if [ "$CurrentIpAddress" != "$DnsIpAddress" ]; then
   echo "Updating CloudFlare DNS record $CF_RECORD_NAME from $DnsIpAddress to $CurrentIpAddress..."
   update=$(updateDnsRecord $CF_ZONE_ID $CF_RECORD_ID $CF_RECORD_NAME $CurrentIpAddress)
