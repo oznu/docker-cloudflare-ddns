@@ -4,7 +4,7 @@ services:
   - docker
 
 env:
-  - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX=""
+  - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX="amd64"
   - S6_ARCH=armhf DOCKERFILE="Dockerfile" TAG_SUFFIX="armhf"
   - S6_ARCH=aarch64 DOCKERFILE="Dockerfile" TAG_SUFFIX="aarch64"
 
