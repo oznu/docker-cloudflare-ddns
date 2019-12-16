@@ -16,3 +16,29 @@ script:
   - docker build -f $DOCKERFILE $IMAGE_CACHE --build-arg S6_ARCH=${S6_ARCH} -t $TARGET_IMAGE:$TARGET_IMAGE_TAG .
   - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   - docker push $TARGET_IMAGE:$TARGET_IMAGE_TAG
+jobs:
+  include:
+    - stage: manifest
+      script:
+        # # update docker to edge
+        # - sudo apt update -y
+        # - sudo apt install --only-upgrade docker-ce -y
+        
+        # # enable experimental to use docker manifest command
+        # - mkdir $HOME/.docker
+        # - |-
+        #   echo '{"experimental": "enabled"}' | tee $HOME/.docker/config.json
+        # - |-
+        #   echo '{"experimental": true,"storage-driver": "overlay2","max-concurrent-downloads": 50,"max-concurrent-uploads": 50}' | sudo tee /etc/docker/daemon.json
+        # - sudo service docker restart
+
+        # login
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        
+        # main
+        - export MANIFEST_SUFFIX=$(if [ "$TRAVIS_BRANCH" = "master" ]; then echo "latest"; else echo "$TRAVIS_BRANCH"; fi)
+        - export TAG_PREFIX=$(if [ "$TRAVIS_BRANCH" = "master" ]; then echo ""; else echo "$TRAVIS_BRANCH-"; fi)
+        - docker manifest create $TARGET_IMAGE:$MANIFEST_SUFFIX $TARGET_IMAGE:${TAG_PREFIX}amd64 $TARGET_IMAGE:${TAG_PREFIX}arm32v6 $TARGET_IMAGE:${TAG_PREFIX}arm64v8
+        - docker manifest annotate $TARGET_IMAGE:$MANIFEST_SUFFIX $TARGET_IMAGE:${TAG_PREFIX}arm32v6 --os=linux --arch=arm --variant=v6
+        - docker manifest annotate $TARGET_IMAGE:$MANIFEST_SUFFIX $TARGET_IMAGE:${TAG_PREFIX}arm64v8 --os=linux --arch=arm64 --variant=v8
+        - docker manifest push $TARGET_IMAGE:$MANIFEST_SUFFIX

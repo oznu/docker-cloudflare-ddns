@@ -1,5 +1,5 @@
 ARG S6_ARCH
-FROM oznu/s6-alpine:3.7r2-${S6_ARCH:-amd64}
+FROM oznu/s6-alpine:3.10-${S6_ARCH:-amd64}
 
 RUN apk add --no-cache jq curl bind-tools
 
