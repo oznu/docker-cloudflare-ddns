@@ -5,8 +5,8 @@ services:
 
 env:
   - S6_ARCH=amd64 DOCKERFILE="Dockerfile" TAG_SUFFIX="amd64"
-  - S6_ARCH=armhf DOCKERFILE="Dockerfile" TAG_SUFFIX="armhf"
-  - S6_ARCH=aarch64 DOCKERFILE="Dockerfile" TAG_SUFFIX="aarch64"
+  - S6_ARCH=armhf DOCKERFILE="Dockerfile" TAG_SUFFIX="arm32v6" ALT_SUFFIX="armhf"
+  - S6_ARCH=aarch64 DOCKERFILE="Dockerfile" TAG_SUFFIX="arm64v8" ALT_SUFFIX="aarch64"
 
 script:
   - sudo apt-get --yes --no-install-recommends install binfmt-support qemu-user-static
@@ -16,6 +16,17 @@ script:
   - docker build -f $DOCKERFILE $IMAGE_CACHE --build-arg S6_ARCH=${S6_ARCH} -t $TARGET_IMAGE:$TARGET_IMAGE_TAG .
   - docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
   - docker push $TARGET_IMAGE:$TARGET_IMAGE_TAG
+
+  # push alternate tags
+  - if [ -z "$ALT_SUFFIX" ]; then
+      echo "No alternate tags set for this build.";
+    else
+      echo "Tagging with alternate tag '$ALT_SUFFIX'";
+      export ALT_IMAGE_TAG=$(if [ "$TRAVIS_BRANCH" = "master" ]; then if [ "$ALT_SUFFIX" = "" ]; then echo "error"; else echo "$ALT_SUFFIX"; fi; else if [ "$ALT_SUFFIX" = "" ]; then echo "$TRAVIS_BRANCH"; else echo "$TRAVIS_BRANCH-$ALT_SUFFIX"; fi; fi);
+      docker tag $TARGET_IMAGE:$TARGET_IMAGE_TAG $TARGET_IMAGE:$ALT_IMAGE_TAG;
+      docker push $TARGET_IMAGE:$ALT_IMAGE_TAG;
+    fi
+
 jobs:
   include:
     - stage: manifest
