@@ -4,8 +4,7 @@ cloudflare() {
   curl -sSL \
     -H "Accept: application/json" \
     -H "Content-Type: application/json" \
-    -H "X-Auth-Email: $EMAIL" \
-    -H "X-Auth-Key: $API_KEY" \
+    -H "Authorization: Bearer $API_KEY" \
     "$@"
 }
 
@@ -42,7 +41,7 @@ getDnsRecordName() {
 }
 
 verifyToken() {
-  cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user
+  cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user/tokens/verify
 }
 
 getZoneId() {
@@ -58,7 +57,7 @@ createDnsRecord() {
     PROXIED="false"
   fi
 
-  cloudflare -X POST -d "{\"type\": \"$RRTYPE\",\"name\":\"$2\",\"content\":\"$3\",\"proxied\":$PROXIED}" "$CF_API/zones/$1/dns_records" | jq -r '.result.id'
+  cloudflare -X POST -d "{\"type\": \"$RRTYPE\",\"name\":\"$2\",\"content\":\"$3\",\"proxied\":$PROXIED,\"ttl\":180 }" "$CF_API/zones/$1/dns_records" | jq -r '.result.id'
 }
 
 updateDnsRecord() {
@@ -66,7 +65,7 @@ updateDnsRecord() {
     PROXIED="false"
   fi
 
-  cloudflare -X PUT -d "{\"type\": \"$RRTYPE\",\"name\":\"$3\",\"content\":\"$4\",\"proxied\":$PROXIED}" "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
+  cloudflare -X PUT -d "{\"type\": \"$RRTYPE\",\"name\":\"$3\",\"content\":\"$4\",\"proxied\":$PROXIED,\"ttl\":180 }" "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
 }
 
 deleteDnsRecord() {
