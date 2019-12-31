@@ -40,12 +40,18 @@ docker run \
 
 * `--restart=always` - ensure the container restarts automatically after host reboot.
 * `-e EMAIL` - Your CloudFlare email address. **Required**
-* `-e API_KEY` - Your CloudFlare API Key. Get it here: https://www.cloudflare.com/a/profile. **Required**
+* `-e API_KEY` - Your CloudFlare API Key or scoped API token. Get it here: https://www.cloudflare.com/a/profile. **Required**
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
 * `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
 * `-e RRTYPE=A` - Set to `AAAA` to use set IPv6 records instead of IPv4 records. Defaults to `A` for IPv4 records.
 * `-e DELETE_ON_STOP` - Set to `true` to have the dns record deleted when the container is stopped. Defaults to `false`.
+
+## Cloudflare API token
+
+Cloudflare prefers the usage of [scoped API tokens](https://blog.cloudflare.com/api-tokens-general-availability/). To use such a token, navigate to cloudflare settings page and create a token with the following scopes: `Zone.Zone Settings (read), Zone.Zone (read), Zone.DNS (write)`.
+
+Omit environment variable `EMAIL` and submit your generated `API_KEY`. The container will use the modern Bearer token login.
 
 ## Multiple Domains
 

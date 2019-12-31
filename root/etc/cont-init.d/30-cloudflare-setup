@@ -9,10 +9,17 @@ if [ "$statusCode" != "200" ]; then
   echo "----------------------------------------------------------------"
   echo "ERROR: Invalid CloudFlare Credentials - $statusCode"
   echo "----------------------------------------------------------------"
-  echo "Make sure the EMAIL and API_KEY variables are correct. You can"
-  echo "get your CloudFlare API Key here:"
+  if [ -z "$EMAIL" ]
+    then
+      echo "Make sure the API_KEY is correct. You can"
+      echo "get your scoped CloudFlare API Token here:"
+      echo "https://dash.cloudflare.com/profile/api-tokens"
+    else
+      echo "Make sure the EMAIL and API_KEY variables are correct. You can"
+      echo "get your CloudFlare API Key here:"
+     echo "https://www.cloudflare.com/a/profile"
+  fi
   echo
-  echo "https://www.cloudflare.com/a/profile"
   echo "----------------------------------------------------------------"
   exit 1
 fi

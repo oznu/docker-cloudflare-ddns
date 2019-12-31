@@ -1,11 +1,22 @@
 #!/usr/bin/with-contenv sh
 
 cloudflare() {
-  curl -sSL \
-    -H "Accept: application/json" \
-    -H "Content-Type: application/json" \
-    -H "Authorization: Bearer $API_KEY" \
-    "$@"
+  if [ -z "$EMAIL" ]
+  then
+      curl -sSL \
+      -H "Accept: application/json" \
+      -H "Content-Type: application/json" \
+      -H "Authorization: Bearer $API_KEY" \
+      "$@"
+  else
+      curl -sSL \
+      -H "Accept: application/json" \
+      -H "Content-Type: application/json" \
+      -H "X-Auth-Email: $EMAIL" \
+      -H "X-Auth-Key: $API_KEY" \
+      "$@"
+  fi
+
 }
 
 getPublicIpAddress() {
@@ -41,7 +52,12 @@ getDnsRecordName() {
 }
 
 verifyToken() {
-  cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user/tokens/verify
+  if [ -z "$EMAIL" ]
+  then
+    cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user/tokens/verify
+  else
+    cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user
+  fi
 }
 
 getZoneId() {
