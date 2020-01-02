@@ -29,13 +29,13 @@ docker run \
 ## Parameters
 
 * `--restart=always` - ensure the container restarts automatically after host reboot.
-* `-e API_KEY` - Your CloudFlare scoped API token. Generate a zone token here: https://dash.cloudflare.com/profile/api-tokens. **Required**
+* `-e API_KEY` - Your CloudFlare scoped API token. See the [Creating a Cloudflare API token](#creating-a-cloudflare-api-token) below. **Required**
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
 * `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
 * `-e RRTYPE=A` - Set to `AAAA` to use set IPv6 records instead of IPv4 records. Defaults to `A` for IPv4 records.
 * `-e DELETE_ON_STOP` - Set to `true` to have the dns record deleted when the container is stopped. Defaults to `false`.
-* `-e INTERFACE=tun0` - Set to `tun0` to have the IP pulled from a network interface named `tun0`. If this is not supplied the public IP will be used. Requires `--network host` run argument.
+* `-e INTERFACE=tun0` - Set to `tun0` to have the IP pulled from a network interface named `tun0`. If this is not supplied the public IP will be used instead. Requires `--network host` run argument.
 
 ## Depreciated Parameters
 
@@ -51,7 +51,8 @@ To create a CloudFlare API token for your DNS zone go to https://dash.cloudflare
   * Zone - Zone Settings - Read
   * Zone - Zone - Read
   * Zone - DNS - Edit
-4. Optionally set the zone resources to restrict the token to a single dns zone
+4. Set the zone resources to:
+  * Include - All zones
 5. Complete the wizard and copy the generated token into the `API_KEY` variable for the container
 
 ## Multiple Domains
@@ -73,7 +74,6 @@ services:
     image: oznu/cloudflare-ddns:latest
     restart: always
     environment:
-      - EMAIL=hello@example.com
       - API_KEY=xxxxxxx
       - ZONE=example.com
       - SUBDOMAIN=subdomain
