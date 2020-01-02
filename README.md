@@ -46,6 +46,7 @@ docker run \
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
 * `-e RRTYPE=A` - Set to `AAAA` to use set IPv6 records instead of IPv4 records. Defaults to `A` for IPv4 records.
 * `-e DELETE_ON_STOP` - Set to `true` to have the dns record deleted when the container is stopped. Defaults to `false`.
+* `-e INTERFACE=tun0` - Set to `tun0` to have the IP pulled from a network interface named `tun0`. If this is not supplied the public IP will be used. Requires `--network host` run argument.
 
 ## Cloudflare API token
 
