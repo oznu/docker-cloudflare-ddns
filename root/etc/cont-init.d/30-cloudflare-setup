@@ -47,6 +47,10 @@ echo "DNS Zone: $ZONE ($CFZoneId)"
 # Check we can get the current public ip address
 PublicIpAddress=$(getPublicIpAddress)
 
+if [ ! -z ${INTERFACE+x} ]; then
+  PublicIpAddress=$(getLocalIpAddress)
+fi
+
 if [ "$PublicIpAddress" == "" ]; then
   echo "----------------------------------------------------------------"
   if [ "$RRTYPE" == "AAAA" ]; then
