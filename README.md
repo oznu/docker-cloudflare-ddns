@@ -48,11 +48,11 @@ To create a CloudFlare API token for your DNS zone go to https://dash.cloudflare
 1. Click Create Token
 2. Provide the token a name, for example, `cloudflare-ddns`
 3. Grant the token the following permissions:
-  * Zone - Zone Settings - Read
-  * Zone - Zone - Read
-  * Zone - DNS - Edit
+    * Zone - Zone Settings - Read
+    * Zone - Zone - Read
+    * Zone - DNS - Edit
 4. Set the zone resources to:
-  * Include - All zones
+    * Include - All zones
 5. Complete the wizard and copy the generated token into the `API_KEY` variable for the container
 
 ## Multiple Domains
