@@ -17,7 +17,10 @@ if [ "$statusCode" != "200" ]; then
     else
       echo "Make sure the EMAIL and API_KEY variables are correct. You can"
       echo "get your CloudFlare API Key here:"
-     echo "https://www.cloudflare.com/a/profile"
+      echo "https://www.cloudflare.com/a/profile"
+      echo
+      echo "If you are using a zone token please remove the EMAIL variable"
+      echo "from this container."
   fi
   echo
   echo "----------------------------------------------------------------"

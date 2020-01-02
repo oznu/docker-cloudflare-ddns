@@ -1,8 +1,7 @@
 #!/usr/bin/with-contenv sh
 
 cloudflare() {
-  if [ -z "$EMAIL" ]
-  then
+  if [ -z "$EMAIL" ]; then
       curl -sSL \
       -H "Accept: application/json" \
       -H "Content-Type: application/json" \
@@ -16,7 +15,6 @@ cloudflare() {
       -H "X-Auth-Key: $API_KEY" \
       "$@"
   fi
-
 }
 
 getPublicIpAddress() {
@@ -52,8 +50,7 @@ getDnsRecordName() {
 }
 
 verifyToken() {
-  if [ -z "$EMAIL" ]
-  then
+  if [ -z "$EMAIL" ]; then
     cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user/tokens/verify
   else
     cloudflare -o /dev/null -w "%{http_code}" "$CF_API"/user

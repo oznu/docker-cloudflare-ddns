@@ -4,13 +4,15 @@
 
 This small Alpine Linux based Docker image will allow you to use the free [CloudFlare DNS Service](https://www.cloudflare.com/dns/) as a Dynamic DNS Provider ([DDNS](https://en.wikipedia.org/wiki/Dynamic_DNS)).
 
+This is a multi-arch image and will run on amd64, aarch64, and armhf devices, including the Raspberry Pi.
+
 ## Image Variants
 
-| Image Tag             | Architecture  | OS            | Size   |
-| :-------------------- | :-------------| :------------ | :----  |
-| latest                | x64           | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns.svg)](https://microbadger.com/images/oznu/cloudflare-ddns) |
+| Image Tag      | Architecture  | OS            | Size   |
+| :------------- | :-------------| :------------ | :----  |
+| latest         | x64           | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns.svg)](https://microbadger.com/images/oznu/cloudflare-ddns) |
 | armhf          | arm32v6       | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns:armhf.svg)](https://microbadger.com/images/oznu/cloudflare-ddns:armhf) |
-| aarch64         | arm64       | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns:aarch64.svg)](https://microbadger.com/images/oznu/cloudflare-ddns:aarch64) |
+| aarch64        | arm64         | Alpine Linux  | [![](https://images.microbadger.com/badges/image/oznu/cloudflare-ddns:aarch64.svg)](https://microbadger.com/images/oznu/cloudflare-ddns:aarch64) |
 
 ## Usage
 
@@ -18,40 +20,38 @@ Quick Setup:
 
 ```shell
 docker run \
-  -e EMAIL=hello@example.com \
   -e API_KEY=xxxxxxx \
   -e ZONE=example.com \
   -e SUBDOMAIN=subdomain \
   oznu/cloudflare-ddns
 ```
 
-This image will also run on a Raspberry Pi or other ARM based boards that support Docker using the `armhf` or `aarch64` tags:
-
-```shell
-docker run \
-  -e EMAIL=hello@example.com \
-  -e API_KEY=xxxxxxx \
-  -e ZONE=example.com \
-  -e SUBDOMAIN=subdomain \
-  oznu/cloudflare-ddns:armhf
-```
-
 ## Parameters
 
 * `--restart=always` - ensure the container restarts automatically after host reboot.
-* `-e EMAIL` - Your CloudFlare email address. **Required**
-* `-e API_KEY` - Your CloudFlare API Key or scoped API token. Get it here: https://www.cloudflare.com/a/profile. **Required**
+* `-e API_KEY` - Your CloudFlare scoped API token. Generate a zone token here: https://dash.cloudflare.com/profile/api-tokens. **Required**
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
 * `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
 * `-e PROXIED` - Set to `true` to make traffic go through the CloudFlare CDN. Defaults to `false`.
 * `-e RRTYPE=A` - Set to `AAAA` to use set IPv6 records instead of IPv4 records. Defaults to `A` for IPv4 records.
 * `-e DELETE_ON_STOP` - Set to `true` to have the dns record deleted when the container is stopped. Defaults to `false`.
 
-## Cloudflare API token
+## Depreciated Parameters
 
-Cloudflare prefers the usage of [scoped API tokens](https://blog.cloudflare.com/api-tokens-general-availability/). To use such a token, navigate to cloudflare settings page and create a token with the following scopes: `Zone.Zone Settings (read), Zone.Zone (read), Zone.DNS (write)`.
+* `-e EMAIL` - Your CloudFlare email address when using an Account-level token. This variable MUST NOT be set when using a scoped API token.
 
-Omit environment variable `EMAIL` and submit your generated `API_KEY`. The container will use the modern Bearer token login.
+## Creating a Cloudflare API token
+
+To create a CloudFlare API token for your DNS zone go to https://dash.cloudflare.com/profile/api-tokens and follow these steps:
+
+1. Click Create Token
+2. Provide the token a name, for example, `cloudflare-ddns`
+3. Grant the token the following permissions:
+  * Zone - Zone Settings - Read
+  * Zone - Zone - Read
+  * Zone - DNS - Edit
+4. Optionally set the zone resources to restrict the token to a single dns zone
+5. Complete the wizard and copy the generated token into the `API_KEY` variable for the container
 
 ## Multiple Domains
 
@@ -69,7 +69,7 @@ If you prefer to use [Docker Compose](https://docs.docker.com/compose/):
 version: '2'
 services:
   cloudflare-ddns:
-    image: oznu/cloudflare-ddns:latest # change 'latest' to 'armhf' or 'aarch64' if running on an arm device
+    image: oznu/cloudflare-ddns:latest
     restart: always
     environment:
       - EMAIL=hello@example.com
