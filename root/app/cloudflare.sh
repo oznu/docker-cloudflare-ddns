@@ -26,7 +26,7 @@ getLocalIpAddress() {
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # try dns method first.
-    IP_ADDRESS=$(dig +short @resolver1.opendns.com myip.opendns.com A)
+    IP_ADDRESS=$(dig +short @1.1.1.1 ch txt whoami.cloudflare | tr -d '"')
 
     # if dns method fails, use http method
     if [ "$IP_ADDRESS" = "" ]; then
@@ -35,12 +35,12 @@ getPublicIpAddress() {
 
     echo $IP_ADDRESS
   elif [ "$RRTYPE" == "AAAA" ]; then
-    # not sure if dns method for ipv6 exists, use http method as default
-    IP_ADDRESS=$(curl -sf6 https://ifconfig.co)
+    # try dns method first.
+    IP_ADDRESS=$(dig +short @2606:4700:4700::1111 -6 ch txt whoami.cloudflare | tr -d '"')
 
-    # backup http method
+    # if dns method fails, use http method
     if [ "$IP_ADDRESS" = "" ]; then
-      IP_ADDRESS=$(curl -sf6 https://diagnostic.opendns.com/myip)
+      IP_ADDRESS=$(curl -sf6 https://ifconfig.co)
     fi
 
     echo $IP_ADDRESS
