@@ -76,7 +76,7 @@ createDnsRecord() {
     PROXIED="false"
   fi
 
-  cloudflare -X POST -d "{\"type\": \"$RRTYPE\",\"name\":\"$2\",\"content\":\"$3\",\"proxied\":$PROXIED,\"ttl\":180 }" "$CF_API/zones/$1/dns_records" | jq -r '.result.id'
+  cloudflare -X POST -d "{\"type\": \"$RRTYPE\",\"name\":\"$2\",\"content\":\"$3\",\"proxied\":$PROXIED,\"ttl\":1 }" "$CF_API/zones/$1/dns_records" | jq -r '.result.id'
 }
 
 updateDnsRecord() {
@@ -84,7 +84,7 @@ updateDnsRecord() {
     PROXIED="false"
   fi
 
-  cloudflare -X PUT -d "{\"type\": \"$RRTYPE\",\"name\":\"$3\",\"content\":\"$4\",\"proxied\":$PROXIED,\"ttl\":180 }" "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
+  cloudflare -X PATCH -d "{\"type\": \"$RRTYPE\",\"name\":\"$3\",\"content\":\"$4\",\"proxied\":$PROXIED }" "$CF_API/zones/$1/dns_records/$2" | jq -r '.result.id'
 }
 
 deleteDnsRecord() {
