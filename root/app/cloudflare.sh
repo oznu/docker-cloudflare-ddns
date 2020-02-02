@@ -18,9 +18,13 @@ cloudflare() {
 }
 
 getLocalIpAddress() {
-    IP_ADDRESS=$(ip addr show $INTERFACE | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2}')
-    
-    echo $IP_ADDRESS
+  if [ "$RRTYPE" == "A" ]; then
+    IP_ADDRESS=$(ip addr show $INTERFACE | awk '$1 == "inet" {gsub(/\/.*$/, "", $2); print $2; exit}')
+  elif [ "$RRTYPE" == "AAAA" ]; then
+    IP_ADDRESS=$(ip addr show $INTERFACE | awk '$1 == "inet6" {gsub(/\/.*$/, "", $2); print $2; exit}')
+  fi
+
+  echo $IP_ADDRESS
 }
 
 getPublicIpAddress() {
