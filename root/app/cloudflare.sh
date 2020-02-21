@@ -30,7 +30,7 @@ getLocalIpAddress() {
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # try dns method first.
-    IP_ADDRESS=$(dig +short @1.1.1.1 ch txt whoami.cloudflare | tr -d '"')
+    IP_ADDRESS=$(dig +short myip.opendns.com @resolver1.opendns.com | tr -d '"')
 
     # if dns method fails, use http method
     if [ "$IP_ADDRESS" = "" ]; then
