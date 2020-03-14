@@ -30,7 +30,11 @@ getLocalIpAddress() {
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # try dns method first.
-    IP_ADDRESS=$(dig +short @1.1.1.1 ch txt whoami.cloudflare | tr -d '"')
+    CLOUD_FLARE_IP=$(dig +short @1.1.1.1 ch txt whoami.cloudflare +time=3)
+    CLOUD_FLARE_IP_LEN=${#CLOUD_FLARE_IP}
+
+    # if using cloud flare results in error (some ISPs block 1.1.1.1), use myip.opendns
+    IP_ADDRESS=$([ $CLOUD_FLARE_IP_LEN -gt 15 ] && echo $(dig +short myip.opendns.com @resolver1.opendns.com +time=3 | tr -d '"') || echo "$CLOUD_FLARE_IP")
 
     # if dns method fails, use http method
     if [ "$IP_ADDRESS" = "" ]; then
