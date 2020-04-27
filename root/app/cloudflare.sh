@@ -29,8 +29,11 @@ getLocalIpAddress() {
 
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
+    # Use DNS_SERVER ENV variable or default to 1.1.1.1
+    DNS_SERVER=${DNS_SERVER:=1.1.1.1}
+
     # try dns method first.
-    CLOUD_FLARE_IP=$(dig +short @1.1.1.1 ch txt whoami.cloudflare +time=3 | tr -d '"')
+    CLOUD_FLARE_IP=$(dig +short @$DNS_SERVER ch txt whoami.cloudflare +time=3 | tr -d '"')
     CLOUD_FLARE_IP_LEN=${#CLOUD_FLARE_IP}
 
     # if using cloud flare fails, try opendns (some ISPs block 1.1.1.1)
