@@ -3,11 +3,14 @@
 . /app/cloudflare.sh
 . /config/cloudflare.conf
 
-CurrentIpAddress=$(getPublicIpAddress)
 DnsIpAddress=$(getDnsRecordIp $CF_ZONE_ID $CF_RECORD_ID)
 
-if [ ! -z ${INTERFACE+x} ]; then
+if [ ! -z ${CUSTOM+x} ]; then
+  CurrentIpAddress=$(getCustomIpAddress)
+elif [ ! -z ${INTERFACE+x} ]; then
   CurrentIpAddress=$(getLocalIpAddress)
+else
+  CurrentIpAddress=$(getPublicIpAddress)
 fi
 
 if [ "$CurrentIpAddress" != "$DnsIpAddress" ]; then
