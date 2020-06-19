@@ -5,7 +5,7 @@
 
 DnsIpAddress=$(getDnsRecordIp $CF_ZONE_ID $CF_RECORD_ID)
 
-if [ ! -z ${CUSTOM_SCRIPT+x} ]; then
+if [ ! -z ${CUSTOM_LOOKUP_CMD+x} ]; then
   CurrentIpAddress=$(getCustomIpAddress)
 elif [ ! -z ${INTERFACE+x} ]; then
   CurrentIpAddress=$(getLocalIpAddress)

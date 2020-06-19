@@ -28,7 +28,7 @@ getLocalIpAddress() {
 }
 
 getCustomIpAddress() {
-  IP_ADDRESS=$(sh -c "$CUSTOM_SCRIPT")
+  IP_ADDRESS=$(sh -c "$CUSTOM_LOOKUP_CMD")
   echo $IP_ADDRESS
 }
 
