@@ -27,6 +27,11 @@ getLocalIpAddress() {
   echo $IP_ADDRESS
 }
 
+getCustomIpAddress() {
+  IP_ADDRESS=$(sh -c "$CUSTOM_SCRIPT")
+  echo $IP_ADDRESS
+}
+
 getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # Use DNS_SERVER ENV variable or default to 1.1.1.1
