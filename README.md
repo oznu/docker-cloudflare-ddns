@@ -41,6 +41,7 @@ docker run \
 * `-e INTERFACE=tun0` - Set to `tun0` to have the IP pulled from a network interface named `tun0`. If this is not supplied the public IP will be used instead. Requires `--network host` run argument.
 * `-e CUSTOM_LOOKUP_CMD="echo '1.1.1.1'"` - Set to any shell command to run them and have the IP pulled from the standard output. Leave unset to use default IP address detection methods.
 * `-e DNS_SERVER=10.0.0.2` - Set to the IP address of the DNS server you would like to use. Defaults to 1.1.1.1 otherwise. 
+* `-e CRON` - Set your own custom CRON value before the exec portion. Defaults to every 5 minutes - `*/5	*	*	*	*`	
 
 ## Depreciated Parameters
 
