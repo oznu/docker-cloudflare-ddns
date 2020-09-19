@@ -1,6 +1,10 @@
 #!/usr/bin/with-contenv sh
 
 cloudflare() {
+  if [ -f "$API_KEY_FILE" ]; then
+      API_KEY=$(cat $API_KEY_FILE)
+  fi
+  
   if [ -z "$EMAIL" ]; then
       curl -sSL \
       -H "Accept: application/json" \
