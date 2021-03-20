@@ -22,7 +22,7 @@ Quick Setup:
 docker run \
   -e API_KEY=xxxxxxx \
   -e ZONE=example.com \
-  -e SUBDOMAIN=subdomain \
+  -e SUBDOMAINS=example1,example2 \
   oznu/cloudflare-ddns
 ```
 
@@ -83,7 +83,7 @@ services:
     environment:
       - API_KEY=xxxxxxx
       - ZONE=example.com
-      - SUBDOMAIN=subdomain
+      - SUBDOMAINS=example1,example2
       - PROXIED=false
 ```
 
