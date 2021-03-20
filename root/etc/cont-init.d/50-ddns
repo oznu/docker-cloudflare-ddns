@@ -1,28 +1,30 @@
 #!/usr/bin/with-contenv sh
 
 . /app/cloudflare.sh
-. /config/cloudflare.conf
 
-DnsIpAddress=$(getDnsRecordIp $CF_ZONE_ID $CF_RECORD_ID)
+while IFS= read -r CLOUDFLARE_CONFIG_LINE; do
+	eval $CLOUDFLARE_CONFIG_LINE
+	DnsIpAddress=$(getDnsRecordIp $CF_ZONE_ID $CF_RECORD_ID)
 
-if [ ! -z ${CUSTOM_LOOKUP_CMD+x} ]; then
-  CurrentIpAddress=$(getCustomIpAddress)
-elif [ ! -z ${INTERFACE+x} ]; then
-  CurrentIpAddress=$(getLocalIpAddress)
-else
-  CurrentIpAddress=$(getPublicIpAddress)
-fi
+	if [ ! -z ${CUSTOM_LOOKUP_CMD+x} ]; then
+		CurrentIpAddress=$(getCustomIpAddress)
+	elif [ ! -z ${INTERFACE+x} ]; then
+		CurrentIpAddress=$(getLocalIpAddress)
+	else
+		CurrentIpAddress=$(getPublicIpAddress)
+	fi
 
-if [ "$CurrentIpAddress" != "$DnsIpAddress" ]; then
-  echo "Updating CloudFlare DNS record $CF_RECORD_NAME from $DnsIpAddress to $CurrentIpAddress..."
-  update=$(updateDnsRecord $CF_ZONE_ID $CF_RECORD_ID $CF_RECORD_NAME $CurrentIpAddress)
+	if [ "$CurrentIpAddress" != "$DnsIpAddress" ]; then
+		echo "Updating CloudFlare DNS record $CF_RECORD_NAME from $DnsIpAddress to $CurrentIpAddress..."
+		update=$(updateDnsRecord $CF_ZONE_ID $CF_RECORD_ID $CF_RECORD_NAME $CurrentIpAddress)
 
-  if [ "$update" == "null" ]; then
-    echo "ERROR: Failed to update CloudFlare DNS record $CF_RECORD_NAME from $DnsIpAddress to $CurrentIpAddress"
-  else
-    echo "CloudFlare DNS record $CF_RECORD_NAME ($CurrentIpAddress) updated successfully."
-  fi
+		if [ "$update" == "null" ]; then
+			echo "ERROR: Failed to update CloudFlare DNS record $CF_RECORD_NAME from $DnsIpAddress to $CurrentIpAddress"
+		else
+			echo "CloudFlare DNS record $CF_RECORD_NAME ($CurrentIpAddress) updated successfully."
+		fi
   
-else
-  echo "No DNS update required for $CF_RECORD_NAME ($DnsIpAddress)."
-fi
+	else
+		echo "No DNS update required for $CF_RECORD_NAME ($DnsIpAddress)."
+	fi
+done < /config/cloudflare.conf

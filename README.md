@@ -32,7 +32,7 @@ docker run \
 * `-e API_KEY` - Your CloudFlare scoped API token. See the [Creating a Cloudflare API token](#creating-a-cloudflare-api-token) below. **Required**
   * `API_KEY_FILE` - Path to load your CloudFlare scoped API token from (e.g. a Docker secret). *If both `API_KEY_FILE` and `API_KEY` are specified, `API_KEY_FILE` takes precedence.*
 * `-e ZONE` - The DNS zone that DDNS updates should be applied to. **Required**
-* `-e SUBDOMAIN` - A subdomain of the `ZONE` to write DNS changes to. If this is not supplied the root zone will be used.
+* `-e SUBDOMAINS` - A subdomain list of the `ZONE` to write DNS changes to. If this is not supplied only the root zone will be used.
 
 ## Optional Parameters
 

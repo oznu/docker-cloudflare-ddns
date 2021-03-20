@@ -67,9 +67,14 @@ getPublicIpAddress() {
   fi
 }
 
-getDnsRecordName() {
-  if [ ! -z "$SUBDOMAIN" ]; then
-    echo $SUBDOMAIN.$ZONE
+getDnsRecordsNames() {
+  if [ ! -z "$SUBDOMAINS" ]; then
+    RECORDS="$ZONE"
+    for SUBDOMAIN in $(echo $SUBDOMAINS | sed "s/,/ /g")
+    do
+        RECORDS="$RECORDS,$SUBDOMAIN.$ZONE"
+    done
+    echo $RECORDS
   else
     echo $ZONE
   fi

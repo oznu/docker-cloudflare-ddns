@@ -69,23 +69,26 @@ if [ "$PublicIpAddress" == "" ]; then
 fi
 
 # Get the ID of the dns record from the CloudFlare API
-CFDnsRecordName=$(getDnsRecordName)
-CFDnsRecordId=$(getDnsRecordId $CFZoneId $CFDnsRecordName)
+CFDnsRecordsNames=$(getDnsRecordsNames)
 
-# If the dns record does not exist, create it now.
-if [ "$CFDnsRecordId" == "null" ]; then
-  echo "DNS record for '$CFDnsRecordName' was not found in $ZONE zone. Creating now..."
-  CFDnsRecordId=$(createDnsRecord $CFZoneId $CFDnsRecordName $PublicIpAddress)
+for CFDnsRecordName in $(echo $CFDnsRecordsNames | sed "s/,/ /g")
+do
+	CFDnsRecordId=$(getDnsRecordId $CFZoneId $CFDnsRecordName)
 
-  if [ "$CFDnsRecordId" == "null" ]; then
-    echo "----------------------------------------------------------------"
-    echo "ERROR: Failed to create DNS record '$CFDnsRecordName'"
-    echo "----------------------------------------------------------------"
-    exit 1
-  fi
+	# If the dns record does not exist, create it now.
+	if [ "$CFDnsRecordId" == "null" ]; then
+	  echo "DNS record for '$CFDnsRecordName' was not found in $ZONE zone. Creating now..."
+	  CFDnsRecordId=$(createDnsRecord $CFZoneId $CFDnsRecordName $PublicIpAddress)
 
-fi
+	  if [ "$CFDnsRecordId" == "null" ]; then
+	    echo "----------------------------------------------------------------"
+	    echo "ERROR: Failed to create DNS record '$CFDnsRecordName'"
+	    echo "----------------------------------------------------------------"
+	    exit 1
+	  fi
+	fi
 
-echo "DNS Record: $CFDnsRecordName ($CFDnsRecordId)"
-echo "CF_ZONE_ID=\"$CFZoneId\" CF_RECORD_ID=\"$CFDnsRecordId\" CF_RECORD_NAME=\"$CFDnsRecordName\"" > /config/cloudflare.conf
+	echo "DNS Record: $CFDnsRecordName ($CFDnsRecordId)"
+	echo "CF_ZONE_ID=\"$CFZoneId\" CF_RECORD_ID=\"$CFDnsRecordId\" CF_RECORD_NAME=\"$CFDnsRecordName\"" >> /config/cloudflare.conf
+done
 echo "$CRON	/etc/cont-init.d/50-ddns" > /var/spool/cron/crontabs/root
