@@ -40,6 +40,7 @@ getPublicIpAddress() {
   if [ "$RRTYPE" == "A" ]; then
     # Use DNS_SERVER ENV variable or default to 1.1.1.1
     DNS_SERVER=${DNS_SERVER:=1.1.1.1}
+    HTTP_SERVER=${HTTP_SERVER:=https://ipinfo.io}
 
     # try dns method first.
     CLOUD_FLARE_IP=$(dig +short @$DNS_SERVER ch txt whoami.cloudflare +time=3 | tr -d '"')
@@ -50,7 +51,7 @@ getPublicIpAddress() {
 
     # if dns method fails, use http method
     if [ "$IP_ADDRESS" = "" ]; then
-      IP_ADDRESS=$(curl -sf4 https://ipinfo.io | jq -r '.ip')
+      IP_ADDRESS=$(curl -sf4 $HTTP_SERVER | jq -r '.ip')
     fi
 
     echo $IP_ADDRESS
