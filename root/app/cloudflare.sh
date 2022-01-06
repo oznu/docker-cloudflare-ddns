@@ -68,6 +68,12 @@ getPublicIpAddress() {
 }
 
 getDnsRecordName() {
+  if [ -f "$ZONE_KEY_FILE" ]; then
+      ZONE=$(cat $ZONE_KEY_FILE)
+  fi
+  if [ -f "$SUBDOMAIN_KEY_FILE" ]; then
+      SUBDOMAIN=$(cat $SUBDOMAIN_KEY_FILE)
+  fi
   if [ ! -z "$SUBDOMAIN" ]; then
     echo $SUBDOMAIN.$ZONE
   else
